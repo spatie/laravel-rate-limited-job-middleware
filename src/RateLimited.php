@@ -67,7 +67,8 @@ class RateLimited
             return $next($job);
         }
 
-        Redis::connection($this->connectionName)::throttle($this->key)
+        Redis::connection($this->connectionName)
+            ->throttle($this->key)
             ->block(0)
             ->allow($this->allowedNumberOfJobsInTimeSpan)
             ->every($this->timeSpanInSeconds)
