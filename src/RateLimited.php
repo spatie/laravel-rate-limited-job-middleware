@@ -42,7 +42,7 @@ class RateLimited
 
     public function timespanInSeconds(int $timespanInSeconds)
     {
-        $this->timespanInSeconds = $timespanInSeconds ;
+        $this->timespanInSeconds = $timespanInSeconds;
 
         return $this;
     }
@@ -67,7 +67,8 @@ class RateLimited
             return $next($job);
         }
 
-        Redis::connection($this->connectionName)::throttle($this->key)
+        Redis::connection($this->connectionName)
+            ->throttle($this->key)
             ->block(0)
             ->allow($this->allowedNumberOfJobsInTimeSpan)
             ->every($this->timeSpanInSeconds)
@@ -78,4 +79,3 @@ class RateLimited
             });
     }
 }
-
