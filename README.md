@@ -3,6 +3,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-rate-limited-job-middleware.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-rate-limited-job-middleware)
 [![Build Status](https://img.shields.io/travis/spatie/laravel-rate-limited-job-middleware/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-rate-limited-job-middleware)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-rate-limited-job-middleware.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-rate-limited-job-middleware)
+[![StyleCI](https://github.styleci.io/repos/211561705/shield?branch=master)](https://github.styleci.io/repos/211561705)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-rate-limited-job-middleware.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-rate-limited-job-middleware)
 
 This package contains a [job middleware](https://laravel.com/docs/master/queues#job-middleware) that can rate limit jobs in Laravel apps.
