@@ -42,7 +42,7 @@ class RateLimited
 
     public function timespanInSeconds(int $timespanInSeconds)
     {
-        $this->timespanInSeconds = $timespanInSeconds ;
+        $this->timespanInSeconds = $timespanInSeconds;
 
         return $this;
     }
@@ -78,4 +78,3 @@ class RateLimited
             });
     }
 }
-
