@@ -99,10 +99,10 @@ Here's a silly example where the rate limiting is only activated in January.
 
 public function middleware()
 {
-    $rateLimitJob = Carbon::now()->month === 1;
+    $shouldRateLimitJobs = Carbon::now()->month === 1;
 
     $rateLimitedMiddleware = (new RateLimited())
-        ->enable($rateLimitJob);
+        ->enable($shouldRateLimitJobs);
 
     return [$rateLimitedMiddleware];
 }
