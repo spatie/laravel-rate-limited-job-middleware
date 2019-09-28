@@ -1,0 +1,55 @@
+{
+    "name": "spatie/laravel-rate-limited-job-middleware",
+    "description": "A middleware that can rate limit jobs",
+    "keywords": [
+        "spatie",
+        "laravel-rate-limited-job-middleware"
+    ],
+    "homepage": "https://github.com/spatie/laravel-rate-limited-job-middleware",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Freek Van der Herten",
+            "email": "freek@spatie.be",
+            "homepage": "https://spatie.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.3",
+        "illuminate/redis": "^6.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^4.0",
+        "phpunit/phpunit": "^8.2",
+        "symfony/var-dumper": "^4.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spatie\\RateLimitedMiddleware\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spatie\\RateLimitedMiddleware\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Spatie\\RateLimitedMiddleware\\RateLimitedMiddlewareServiceProvider"
+            ],
+            "aliases": {
+                "RateLimitedMiddleware": "Spatie\\RateLimitedMiddleware\\RateLimitedMiddlewareFacade"
+            }
+        }
+    }
+}
