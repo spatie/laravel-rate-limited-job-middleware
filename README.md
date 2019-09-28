@@ -5,6 +5,8 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-rate-limited-job-middleware.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-rate-limited-job-middleware)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-rate-limited-job-middleware.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-rate-limited-job-middleware)
 
+**THIS PACKAGE HASN'T BEEN TESTED YET, PROCEED WITH CAUTION**
+
 This package contains a [job middleware](https://laravel.com/docs/master/queues#job-middleware) that can rate limit jobs in Laravel apps.
 
 ## Installation
