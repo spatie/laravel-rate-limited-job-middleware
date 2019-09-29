@@ -2,7 +2,7 @@
 
 namespace Spatie\RateLimitedMiddleware;
 
-use Redis;
+use Illuminate\Support\Facades\Redis;
 
 class RateLimited
 {
@@ -42,7 +42,7 @@ class RateLimited
 
     public function timespanInSeconds(int $timespanInSeconds)
     {
-        $this->timespanInSeconds = $timespanInSeconds;
+        $this->timeSpanInSeconds = $timespanInSeconds;
 
         return $this;
     }
@@ -75,7 +75,7 @@ class RateLimited
             ->then(function () use ($job, $next) {
                 $next($job);
             }, function () use ($job) {
-                $job->release($this->timeSpanInSeconds);
+                $job->release($this->releaseInSeconds);
             });
     }
 }
