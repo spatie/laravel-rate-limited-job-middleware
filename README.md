@@ -6,8 +6,6 @@
 [![StyleCI](https://github.styleci.io/repos/211561705/shield?branch=master)](https://github.styleci.io/repos/211561705)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-rate-limited-job-middleware.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-rate-limited-job-middleware)
 
-**THIS PACKAGE HASN'T BEEN TESTED YET, PROCEED WITH CAUTION**
-
 This package contains a [job middleware](https://laravel.com/docs/master/queues#job-middleware) that can rate limit jobs in Laravel apps.
 
 ## Installation
@@ -48,6 +46,24 @@ class TestJob implements ShouldQueue
     {
         return [new RateLimited()];
     }
+}
+```
+
+### Configuring attempts
+
+When using rate limiting, the number of attempts of your job may be hard to predict. Instead of using a fixed number of attempts, it's better to use [time based attempts](https://laravel.com/docs/master/queues#time-based-attempts).
+
+You can add this to your job class:
+
+```php
+/**
+ * Determine the time at which the job should timeout.
+ *
+ * @return \DateTime
+ */
+public function retryUntil()
+{
+    return now()->addDay();
 }
 ```
 
