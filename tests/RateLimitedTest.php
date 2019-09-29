@@ -3,9 +3,9 @@
 namespace Spatie\RateLimitedMiddleware\Tests;
 
 use Closure;
-use Illuminate\Support\Facades\Redis;
 use Mockery;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Support\Facades\Redis;
 use Spatie\RateLimitedMiddleware\RateLimited;
 
 class RateLimitedTest extends TestCase
@@ -56,12 +56,14 @@ class RateLimitedTest extends TestCase
         $jobThrottled = function ($callback) {
             $this->job->shouldReceive('release')->once()->with(90);
             $callback();
+
             return true;
         };
 
         $jobAllowed = function ($callback) {
             $this->job->shouldReceive('fire')->once();
             $callback();
+
             return true;
         };
 
