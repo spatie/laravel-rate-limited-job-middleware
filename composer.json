@@ -41,15 +41,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Spatie\\RateLimitedMiddleware\\RateLimitedMiddlewareServiceProvider"
-            ],
-            "aliases": {
-                "RateLimitedMiddleware": "Spatie\\RateLimitedMiddleware\\RateLimitedMiddlewareFacade"
-            }
-        }
     }
 }
