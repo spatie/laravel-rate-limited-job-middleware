@@ -3,13 +3,13 @@
 namespace Spatie\RateLimitedMiddleware\Tests;
 
 use Closure;
-use Illuminate\Contracts\Queue\Job;
-use Illuminate\Redis\Connections\Connection;
-use Illuminate\Redis\Limiters\DurationLimiterBuilder;
-use Illuminate\Support\Facades\Redis;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Contracts\Queue\Job;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Redis\Connections\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Spatie\RateLimitedMiddleware\RateLimited;
+use Illuminate\Redis\Limiters\DurationLimiterBuilder;
 
 class RateLimitedTest extends TestCase
 {
@@ -62,12 +62,14 @@ class RateLimitedTest extends TestCase
         $jobThrottled = function ($callback) {
             $this->job->expects($this->once())->method('release')->with(90);
             $callback();
+
             return true;
         };
 
         $jobAllowed = function ($callback) {
             $this->job->expects($this->once())->method('fire');
             $callback();
+
             return true;
         };
 
