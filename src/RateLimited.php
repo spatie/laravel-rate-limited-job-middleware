@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Redis;
 
 class RateLimited
 {
-    /** @var array */
+    /** @var bool */
     protected $enabled = true;
 
     protected $connectionName = '';
@@ -19,7 +19,7 @@ class RateLimited
 
     protected $releaseInSeconds = 5;
 
-    public function enabled($enabled = true)
+    public function enabled(bool $enabled = true)
     {
         $this->enabled = $enabled;
 
