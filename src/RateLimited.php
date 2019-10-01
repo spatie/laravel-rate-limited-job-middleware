@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redis;
 
 class RateLimited
 {
-    /** @var bool/\Closure */
+    /** @var bool|\Closure */
     protected $enabled = true;
 
     /** @var string */
@@ -115,7 +115,7 @@ class RateLimited
             $this->enabled = (bool)$this->enabled();
         }
 
-        if (! $this->enabled) {
+        if (!$this->enabled) {
             return $next($job);
         }
 
