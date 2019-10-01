@@ -77,9 +77,9 @@ You can customize all the behaviour. Here's an example where the middleware allo
 public function middleware()
 {
     $rateLimitedMiddleware = (new RateLimited())
-        ->timespanInSeconds(60)
-        ->allowedNumberOfJobsInTimeSpan(30)
-        ->releaseInSeconds(90);
+        ->allow(30)
+        ->everySeconds(60)
+        ->releaseAfterSeconds(90);
 
     return [$rateLimitedMiddleware];
 }
@@ -87,9 +87,13 @@ public function middleware()
 
 ### Customizing Redis
 
-By default, the middleware will use the default Redis connection. The default key that will be used in redis named `rate-limited-job-middleware`. If you apply the middleware on different jobs, you should customize that key per job.
+By default, the middleware will use the default Redis connection. 
 
-Here's an example where a custom connection and key is used.
+The default key that will be used in redis will be the name of the class that created the instance of the middleware. In most cases this will be name of job in which the middleware is applied. If this is not what you expect, you can use the `key` method to customize it. 
+ 
+
+
+Here's an example where a custom connection and custom key is used.
 
 ```php
 // in your job
@@ -98,7 +102,7 @@ public function middleware()
 {
     $rateLimitedMiddleware = (new RateLimited())
         ->connection('my-custom-connection')
-        ->key('my-job-key');
+        ->key('my-custm-key');
 
     return [$rateLimitedMiddleware];
 }
@@ -107,6 +111,8 @@ public function middleware()
 ### Conditionally applying the middleware
 
 If you want to conditionally apply the middleware you can use the `enable` method. If accepts a boolean that determines if the middleware should rate limit your job or not.
+
+You can also pass a `Closure` to `enable`. If it evaluates to a truthy value the middleware will be enable.
 
 Here's a silly example where the rate limiting is only activated in January.
 
@@ -123,6 +129,20 @@ public function middleware()
     return [$rateLimitedMiddleware];
 }
 ```
+
+### Available methods.
+
+These methods are available to be called on the middleware. Their names should be self-explanatory.
+
+- `allow(int $allowedNumberOfJobsInTimeSpan)`
+- `everySecond(int $timespanInSeconds = 1)`
+- `everySeconds(int $timespanInSeconds)`
+- `everyMinute(int $timespanInMinutes = 1)`
+- `everyMinutes(int $timespanInMinutes)`
+- `releaseAfterOneSecond()`
+- `releaseAfterSeconds(int $releaseInSeconds)`
+- `releaseAfterOneMinute()`
+- `releaseAfterMinutes(int $releaseInSeconds)`
 
 ### Testing
 

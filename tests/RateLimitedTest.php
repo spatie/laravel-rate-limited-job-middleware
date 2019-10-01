@@ -2,7 +2,6 @@
 
 namespace Spatie\RateLimitedMiddleware\Tests;
 
-use Closure;
 use Mockery;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Redis;
