@@ -56,12 +56,11 @@ When using rate limiting, the number of attempts of your job may be hard to pred
 You can add this to your job class:
 
 ```php
-/**
+/*
  * Determine the time at which the job should timeout.
  *
- * @return \DateTime
  */
-public function retryUntil()
+public function retryUntil() :  \DateTime
 {
     return now()->addDay();
 }
