@@ -44,7 +44,7 @@ class RateLimitedTest extends TestCase
         $this->job->shouldReceive('fire')->times(2);
         $this->job->shouldReceive('release')->times(3);
 
-        foreach(range(1,5) as $i) {
+        foreach (range(1, 5) as $i) {
             $this->middleware->handle($this->job, $this->next);
         }
     }
