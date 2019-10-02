@@ -74,17 +74,17 @@ class RateLimited
 
     public function everySeconds(int $timespanInSeconds)
     {
-        return $this->every($timespanInSeconds);
+        return $this->everySecond($timespanInSeconds);
     }
 
     public function everyMinute(int $timespanInMinutes = 1)
     {
-        return $this->every($timespanInMinutes * 60);
+        return $this->everySecond($timespanInMinutes * 60);
     }
 
     public function everyMinutes(int $timespanInMinutes)
     {
-        return $this->everySeconds($timespanInMinutes * 60);
+        return $this->everySecond($timespanInMinutes * 60);
     }
 
     public function releaseAfterOneSecond()
