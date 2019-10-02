@@ -112,10 +112,10 @@ class RateLimited
     public function handle($job, $next)
     {
         if ($this->enabled instanceof Closure) {
-            $this->enabled = (bool)$this->enabled();
+            $this->enabled = (bool) $this->enabled();
         }
 
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return $next($job);
         }
 
