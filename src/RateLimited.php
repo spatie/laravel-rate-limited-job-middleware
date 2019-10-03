@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Redis;
 
 class RateLimited
 {
-    /** @var bool|\Closure */
-    protected $enabled = true;
+    /** @var \Closure */
+    protected $enabled;
 
     /** @var string */
     protected $connectionName = '';
@@ -39,6 +39,12 @@ class RateLimited
      */
     public function enabled($enabled = true)
     {
+        if (! $enabled instanceof  Closure) {
+            $enabled = function() use ($enabled) {
+                return $enabled;
+            };
+        }
+
         $this->enabled = $enabled;
 
         return $this;
@@ -111,11 +117,7 @@ class RateLimited
 
     public function handle($job, $next)
     {
-        if ($this->enabled instanceof Closure) {
-            $this->enabled = (bool) $this->enabled();
-        }
-
-        if (! $this->enabled) {
+        if (! (bool)$this->enabled()) {
             return $next($job);
         }
 
