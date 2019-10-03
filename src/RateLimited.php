@@ -40,7 +40,7 @@ class RateLimited
     public function enabled($enabled = true)
     {
         if (! $enabled instanceof  Closure) {
-            $enabled = function() use ($enabled) {
+            $enabled = function () use ($enabled) {
                 return $enabled;
             };
         }
@@ -117,7 +117,7 @@ class RateLimited
 
     public function handle($job, $next)
     {
-        if (! (bool)$this->enabled()) {
+        if (! (bool) $this->enabled()) {
             return $next($job);
         }
 
