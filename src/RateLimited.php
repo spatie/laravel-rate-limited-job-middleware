@@ -7,14 +7,12 @@ use Illuminate\Support\Facades\Redis;
 
 class RateLimited
 {
-    /** @var array */
     /** @var bool/\Closure */
     protected $enabled = true;
 
     /** @var string */
     protected $connectionName = '';
 
-    protected $key = 'rate-limited-job-middleware';
     /** @var string */
     protected $key;
 
@@ -67,7 +65,6 @@ class RateLimited
         return $this;
     }
 
-    public function allowedNumberOfJobsInTimeSpan(int $allowedNumberOfJobsInTimeSpan)
     public function allow(int $allowedNumberOfJobsInTimeSpan)
     {
         $this->allowedNumberOfJobsInTimeSpan = $allowedNumberOfJobsInTimeSpan;
@@ -75,7 +72,6 @@ class RateLimited
         return $this;
     }
 
-    public function releaseInSeconds(int $releaseInSeconds)
     public function everySecond(int $timespanInSeconds = 1)
     {
         $this->timeSpanInSeconds = $timespanInSeconds;
@@ -85,17 +81,17 @@ class RateLimited
 
     public function everySeconds(int $timespanInSeconds)
     {
-        return $this->every($timespanInSeconds);
+        return $this->everySecond($timespanInSeconds);
     }
 
     public function everyMinute(int $timespanInMinutes = 1)
     {
-        return $this->every($timespanInMinutes * 60);
+        return $this->everySecond($timespanInMinutes * 60);
     }
 
     public function everyMinutes(int $timespanInMinutes)
     {
-        return $this->everySeconds($timespanInMinutes * 60);
+        return $this->everySecond($timespanInMinutes * 60);
     }
 
     public function releaseAfterOneSecond()
