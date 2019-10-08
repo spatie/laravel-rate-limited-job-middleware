@@ -1,4 +1,4 @@
-# A middleware that can rate limit jobs
+# A job middleware to rate limit jobs
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-rate-limited-job-middleware.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-rate-limited-job-middleware)
 [![Build Status](https://img.shields.io/travis/spatie/laravel-rate-limited-job-middleware/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-rate-limited-job-middleware)
