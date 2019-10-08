@@ -109,9 +109,9 @@ public function middleware()
 
 ### Conditionally applying the middleware
 
-If you want to conditionally apply the middleware you can use the `enable` method. If accepts a boolean that determines if the middleware should rate limit your job or not.
+If you want to conditionally apply the middleware you can use the `enabled` method. If accepts a boolean that determines if the middleware should rate limit your job or not.
 
-You can also pass a `Closure` to `enable`. If it evaluates to a truthy value the middleware will be enable.
+You can also pass a `Closure` to `enabled`. If it evaluates to a truthy value the middleware will be enable.
 
 Here's a silly example where the rate limiting is only activated in January.
 
@@ -123,7 +123,7 @@ public function middleware()
     $shouldRateLimitJobs = Carbon::now()->month === 1;
 
     $rateLimitedMiddleware = (new RateLimited())
-        ->enable($shouldRateLimitJobs);
+        ->enabled($shouldRateLimitJobs);
 
     return [$rateLimitedMiddleware];
 }
