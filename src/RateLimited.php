@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redis;
 
 class RateLimited
 {
-    /** @var bool/\Closure */
+    /** @var bool|\Closure */
     protected $enabled = true;
 
     /** @var string */
