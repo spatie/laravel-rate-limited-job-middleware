@@ -25,6 +25,9 @@ class RateLimited
     /** @var int */
     protected $releaseInSeconds = 5;
 
+    /** @var callable */
+    protected $releaseAfterCallback = null;
+
     public function __construct()
     {
         $calledByClass = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
@@ -116,6 +119,22 @@ class RateLimited
         return $this->releaseAfterSeconds($releaseInSeconds * 60);
     }
 
+    public function releaseAfter(callable $releaseAfter)
+    {
+        $this->releaseAfterCallback = $releaseAfter;
+
+        return $this;
+    }
+
+    protected function releaseDuration($job) :int
+    {
+        if (!is_null($this->releaseAfterCallback)) {
+            return call_user_func($this->releaseAfterCallback, [$job]);
+        }
+
+        return $this->releaseInSeconds;
+    }
+
     public function handle($job, $next)
     {
         if ($this->enabled instanceof Closure) {
@@ -134,7 +153,8 @@ class RateLimited
             ->then(function () use ($job, $next) {
                 $next($job);
             }, function () use ($job) {
-                $job->release($this->releaseInSeconds);
+                $job->release($this->releaseDuration($job));
             });
     }
+
 }

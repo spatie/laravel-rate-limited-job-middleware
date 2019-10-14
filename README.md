@@ -142,6 +142,7 @@ These methods are available to be called on the middleware. Their names should b
 - `releaseAfterSeconds(int $releaseInSeconds)`
 - `releaseAfterOneMinute()`
 - `releaseAfterMinutes(int $releaseInSeconds)`
+- `releaseAfter(callable $releaseAfter)`
 
 ### Testing
 
