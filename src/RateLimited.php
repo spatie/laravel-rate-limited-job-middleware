@@ -128,7 +128,7 @@ class RateLimited
 
     protected function releaseDuration($job) :int
     {
-        if (!is_null($this->releaseAfterCallback)) {
+        if (! is_null($this->releaseAfterCallback)) {
             return call_user_func($this->releaseAfterCallback, [$job]);
         }
 
