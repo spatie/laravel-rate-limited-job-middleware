@@ -156,5 +156,4 @@ class RateLimited
                 $job->release($this->releaseDuration($job));
             });
     }
-
 }
