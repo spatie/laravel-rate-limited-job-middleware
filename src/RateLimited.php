@@ -114,9 +114,9 @@ class RateLimited
         return $this->releaseAfterMinutes(1);
     }
 
-    public function releaseAfterMinutes(int $releaseInSeconds)
+    public function releaseAfterMinutes(int $releaseInMinutes)
     {
-        return $this->releaseAfterSeconds($releaseInSeconds * 60);
+        return $this->releaseAfterSeconds($releaseInMinutes * 60);
     }
 
     public function releaseAfter(callable $releaseAfter)
