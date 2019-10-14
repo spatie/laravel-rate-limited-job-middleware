@@ -57,6 +57,19 @@ class RateLimitedTest extends TestCase
         $this->middleware->enabled(false)->handle($this->job, $this->next);
     }
 
+    /** @test */
+    public function release_can_be_set_via_callback()
+    {
+        $this->job->shouldReceive('fire')->times(2);
+        $this->job->shouldReceive('release')->times(1)->with(2);
+
+        foreach (range(1, 3) as $i) {
+            $this->middleware->releaseAfter(static function () {
+                return 2;
+            })->handle($this->job, $this->next);
+        }
+    }
+
     private function mockRedis(): void
     {
         $this->redis = Mockery::mock(Connection::class);
