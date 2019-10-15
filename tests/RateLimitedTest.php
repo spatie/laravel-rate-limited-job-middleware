@@ -58,7 +58,7 @@ class RateLimitedTest extends TestCase
     }
 
     /** @test */
-    public function release_can_be_set_via_callback()
+    public function release_can_be_set_with_random_seconds()
     {
         $this->job->shouldReceive('fire')->times(2);
         $this->job->shouldReceive('release')->times(1)->with(1);
