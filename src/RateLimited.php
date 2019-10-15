@@ -25,8 +25,8 @@ class RateLimited
     /** @var int */
     protected $releaseInSeconds = 5;
 
-    /** @var callable */
-    protected $releaseAfterCallback = null;
+    /** @var array */
+    protected $releaseRandomSeconds = null;
 
     public function __construct()
     {
@@ -119,17 +119,17 @@ class RateLimited
         return $this->releaseAfterSeconds($releaseInMinutes * 60);
     }
 
-    public function releaseAfter(callable $releaseAfter)
+    public function releaseAfterRandomSeconds(int $min = 1, int $max = 10)
     {
-        $this->releaseAfterCallback = $releaseAfter;
+        $this->releaseRandomSeconds = [$min, $max];
 
         return $this;
     }
 
-    protected function releaseDuration($job) :int
+    protected function releaseDuration() :int
     {
-        if (! is_null($this->releaseAfterCallback)) {
-            return call_user_func($this->releaseAfterCallback, [$job]);
+        if (! is_null($this->releaseRandomSeconds)) {
+            return $this->releaseRandomSeconds[array_rand($this->releaseRandomSeconds)];
         }
 
         return $this->releaseInSeconds;
@@ -153,7 +153,7 @@ class RateLimited
             ->then(function () use ($job, $next) {
                 $next($job);
             }, function () use ($job) {
-                $job->release($this->releaseDuration($job));
+                $job->release($this->releaseDuration());
             });
     }
 }

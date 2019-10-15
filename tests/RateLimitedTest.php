@@ -61,12 +61,11 @@ class RateLimitedTest extends TestCase
     public function release_can_be_set_via_callback()
     {
         $this->job->shouldReceive('fire')->times(2);
-        $this->job->shouldReceive('release')->times(1)->with(2);
+        $this->job->shouldReceive('release')->times(1)->with(1);
 
         foreach (range(1, 3) as $i) {
-            $this->middleware->releaseAfter(static function () {
-                return 2;
-            })->handle($this->job, $this->next);
+            $this->middleware->releaseAfterRandomSeconds(1, 1)
+                ->handle($this->job, $this->next);
         }
     }
 
