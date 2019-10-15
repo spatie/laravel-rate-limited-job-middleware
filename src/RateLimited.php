@@ -129,7 +129,7 @@ class RateLimited
     protected function releaseDuration() :int
     {
         if (! is_null($this->releaseRandomSeconds)) {
-            return $this->releaseRandomSeconds[array_rand($this->releaseRandomSeconds)];
+            return random_int(...$this->releaseRandomSeconds);
         }
 
         return $this->releaseInSeconds;
