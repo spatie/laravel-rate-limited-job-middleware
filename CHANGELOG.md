@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 1.2.0 - 2019-10-17
+
+- add `releaseAfterRandomSeconds`
+
 ## 1.1.1 - 2019-10-14
 
 - renamed parameter method `releaseAfterMinutes` (#13)
