@@ -2,12 +2,12 @@
 
 namespace Spatie\RateLimitedMiddleware\Tests;
 
+use Illuminate\Redis\Connections\Connection;
+use Illuminate\Redis\Limiters\DurationLimiterBuilder;
+use Illuminate\Support\Facades\Redis;
 use Mockery;
 use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Redis\Connections\Connection;
 use Spatie\RateLimitedMiddleware\RateLimited;
-use Illuminate\Redis\Limiters\DurationLimiterBuilder;
 
 class RateLimitedTest extends TestCase
 {
