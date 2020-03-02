@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 1.3.0 - 2020-03-02
+
+- add support for Laravel 7
+
 ## 1.2.0 - 2019-10-17
 
 - add `releaseAfterRandomSeconds`
