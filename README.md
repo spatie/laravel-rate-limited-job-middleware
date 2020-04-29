@@ -101,7 +101,7 @@ public function middleware()
 {
     $rateLimitedMiddleware = (new RateLimited())
         ->connection('my-custom-connection')
-        ->key('my-custm-key');
+        ->key('my-custom-key');
 
     return [$rateLimitedMiddleware];
 }
