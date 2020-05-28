@@ -84,6 +84,83 @@ public function middleware()
 }
 ```
 
+### Implementing Exponential Backoff
+
+Often remote services such as APIs have rate limits or otherwise respond with a server error. Under these circumstances it makes sense to increment our delay before trying again. You can replace `releaseAfter` methods with `releaseAfterBackoff($this->attempts()` to use the default Rate Limiter interval of 5 seconds. Otherwise, you may chain the `releaseAfter` calls to adjust the backoff interval.
+
+#### Example: `releaseAfterMinute()`
+
+```php
+// in your job
+
+/**
+ * Attempt 1: Release after 60 seconds
+ * Attempt 2: Release after 180 seconds
+ * Attempt 3: Release after 420 seconds
+ * Attempt 4: Release after 900 seconds
+ */
+public function middleware()
+{
+    $rateLimitedMiddleware = (new RateLimited())
+        ->allow(30)
+        ->everySeconds(60)
+        ->releaseAfterMinute()
+        ->releaseAfterBackoff($this->attempts());
+
+    return [$rateLimitedMiddleware];
+}
+```
+
+#### Example: `releaseAfterSeconds()`
+
+```php
+// in your job
+
+/**
+ * Attempt 1: Release after 5 seconds
+ * Attempt 2: Release after 15 seconds
+ * Attempt 3: Release after 35 seconds
+ * Attempt 4: Release after 75 seconds
+ */
+public function middleware()
+{
+    $rateLimitedMiddleware = (new RateLimited())
+        ->allow(30)
+        ->everySeconds(60)
+        ->releaseAfterSeconds(5)
+        ->releaseAfterBackoff($this->attempts());
+
+    return [$rateLimitedMiddleware];
+}
+```
+
+
+#### Example: Customize Backoff Rate
+
+`releaseAfterBackoff()` accepts the rate multiplier as the second argument. By default, the multiplier is 2.
+
+Below is an example of setting the rate to 3. You'll notice that as the attempts grow, the difference between a rate of 2 vs. a rate of 3 becomes significantly greater.
+
+```php
+// in your job
+
+/**
+ * Attempt 1: Release after 5 seconds
+ * Attempt 2: Release after 20 seconds
+ * Attempt 3: Release after 65 seconds
+ * Attempt 4: Release after 200 seconds
+ */
+public function middleware()
+{
+    $rateLimitedMiddleware = (new RateLimited())
+        ->allow(30)
+        ->everySeconds(60)
+        ->releaseAfterBackoff($this->attempts(), 3);
+
+    return [$rateLimitedMiddleware];
+}
+```
+
 ### Customizing Redis
 
 By default, the middleware will use the default Redis connection. 
