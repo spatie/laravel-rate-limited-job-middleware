@@ -128,12 +128,15 @@ class RateLimited
 
     public function releaseAfterBackoff(int $attemptedCount, int $backoffRate = 2)
     {
-        $rateOffset = ($this->releaseInSeconds * $backoffRate) + $this->releaseInSeconds;
-        $releaseAfterSeconds = ($this->releaseInSeconds * pow($backoffRate, $attemptedCount)) - $rateOffset;
+        $releaseAfterSeconds = 0;
+        $interval = $this->releaseInSeconds;
+        for($attempt = 0; $attempt <= $attemptedCount; $attempt++) {
+            $releaseAfterSeconds += $interval * pow($backoffRate, $attempt);
+        }
 
         return $this->releaseAfterSeconds($releaseAfterSeconds);
     }
-    
+
     protected function releaseDuration(): int
     {
         if (! is_null($this->releaseRandomSeconds)) {
