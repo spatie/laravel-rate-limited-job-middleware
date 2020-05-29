@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 1.4.0 - 2020-05-29
+
+- add feature exponential back-off to release logic (#18)
+
 ## 1.3.0 - 2020-03-02
 
 - add support for Laravel 7
