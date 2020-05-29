@@ -130,7 +130,7 @@ class RateLimited
     {
         $releaseAfterSeconds = 0;
         $interval = $this->releaseInSeconds;
-        for($attempt = 0; $attempt <= $attemptedCount; $attempt++) {
+        for ($attempt = 0; $attempt <= $attemptedCount; $attempt++) {
             $releaseAfterSeconds += $interval * pow($backoffRate, $attempt);
         }
 

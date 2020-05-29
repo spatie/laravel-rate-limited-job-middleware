@@ -83,7 +83,6 @@ class RateLimitedTest extends TestCase
                 ->releaseAfterBackoff($attempts)
                 ->handle($this->job, $this->next);
         }
-
     }
 
     /** @test */
@@ -100,7 +99,6 @@ class RateLimitedTest extends TestCase
                 ->releaseAfterBackoff($attempts, 3)
                 ->handle($this->job, $this->next);
         }
-
     }
 
     private function mockRedis(): void
