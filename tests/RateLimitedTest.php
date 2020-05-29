@@ -69,6 +69,40 @@ class RateLimitedTest extends TestCase
         }
     }
 
+    /** @test */
+    public function release_can_be_set_with_exponential_backoff()
+    {
+        $this->job->shouldReceive('fire')->times(2);
+        $this->job->shouldReceive('release')->with(15)->times(1);
+        $this->job->shouldReceive('release')->with(31)->times(1);
+        $this->job->shouldReceive('release')->with(63)->times(1);
+
+        foreach (range(1, 5) as $attempts) {
+            $this->middleware
+                ->releaseAfterSeconds(1)
+                ->releaseAfterBackoff($attempts)
+                ->handle($this->job, $this->next);
+        }
+
+    }
+
+    /** @test */
+    public function release_can_be_set_with_custom_exponential_backoff_rate()
+    {
+        $this->job->shouldReceive('fire')->times(2);
+        $this->job->shouldReceive('release')->with(40)->times(1);
+        $this->job->shouldReceive('release')->with(121)->times(1);
+        $this->job->shouldReceive('release')->with(364)->times(1);
+
+        foreach (range(1, 5) as $attempts) {
+            $this->middleware
+                ->releaseAfterSeconds(1)
+                ->releaseAfterBackoff($attempts, 3)
+                ->handle($this->job, $this->next);
+        }
+
+    }
+
     private function mockRedis(): void
     {
         $this->redis = Mockery::mock(Connection::class);
