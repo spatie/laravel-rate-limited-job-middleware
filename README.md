@@ -98,7 +98,7 @@ public function middleware()
 
 Often remote services such as APIs have rate limits or otherwise respond with a server error. Under these circumstances it makes sense to increment our delay before trying again. You can replace `releaseAfter` methods with `releaseAfterBackoff($this->attempts()` to use the default Rate Limiter interval of 5 seconds. Otherwise, you may chain the `releaseAfter` calls to adjust the backoff interval.
 
-#### Example: `releaseAfterMinute()`
+#### Example: `releaseAfterOneMinute()`
 
 ```php
 // in your job
@@ -114,7 +114,7 @@ public function middleware()
     $rateLimitedMiddleware = (new RateLimited())
         ->allow(30)
         ->everySeconds(60)
-        ->releaseAfterMinute()
+        ->releaseAfterOneMinute()
         ->releaseAfterBackoff($this->attempts());
 
     return [$rateLimitedMiddleware];
