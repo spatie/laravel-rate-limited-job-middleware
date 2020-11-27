@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 1.5.0 - 2020-11-27
+
+- add support for PHP 8
+
 ## 1.4.1 - 2020-09-08
 
 - add support for Laravel 8
