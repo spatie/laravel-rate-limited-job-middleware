@@ -182,7 +182,7 @@ Here's an example where a custom connection and custom key is used.
 public function middleware()
 {
     $rateLimitedMiddleware = (new RateLimited())
-        ->connection('my-custom-connection')
+        ->connectionName('my-custom-connection')
         ->key('my-custom-key');
 
     return [$rateLimitedMiddleware];
