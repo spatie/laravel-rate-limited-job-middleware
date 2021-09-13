@@ -9,7 +9,7 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-        php: [8.0, 7.4, 7.3]
+        php: [8.0]
         laravel: [8.*, 7.*]
         dependency-version: [prefer-lowest, prefer-stable]
         include:
@@ -47,4 +47,4 @@ jobs:
               echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/pest

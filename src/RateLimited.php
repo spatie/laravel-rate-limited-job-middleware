@@ -4,129 +4,122 @@ namespace Spatie\RateLimitedMiddleware;
 
 use Closure;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 
 class RateLimited
 {
-    /** @var bool|\Closure */
-    protected $enabled = true;
+    protected bool|Closure $enabled = true;
 
-    /** @var string */
-    protected $connectionName = '';
+    protected string $connectionName = '';
 
-    /** @var string */
-    protected $key;
+    protected string $key;
 
-    /** @var int */
-    protected $timeSpanInSeconds = 1;
+    protected int $timeSpanInSeconds = 1;
 
-    /** @var int */
-    protected $allowedNumberOfJobsInTimeSpan = 5;
+    protected int $allowedNumberOfJobsInTimeSpan = 5;
 
-    /** @var int */
-    protected $releaseInSeconds = 5;
+    protected int $releaseInSeconds = 5;
 
-    /** @var array */
-    protected $releaseRandomSeconds = null;
+    protected ?array $releaseRandomSeconds = null;
 
-    public function __construct()
+    protected bool $useRedis = true;
+
+    public function __construct(bool $useRedis = true)
     {
-        $calledByClass = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'];
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
+        $calledByClass = $backtrace['class'] ?? $backtrace['file'];
 
         $this->key($calledByClass);
+        $this->useRedis = $useRedis;
     }
 
-    /**
-     * @param bool|\Closure $enabled
-     *
-     * @return $this
-     */
-    public function enabled($enabled = true)
+    public function enabled(bool|Closure $enabled = true): self
     {
         $this->enabled = $enabled;
 
         return $this;
     }
 
-    public function connectionName(string $connectionName)
+    public function connectionName(string $connectionName): self
     {
         $this->connectionName = $connectionName;
 
         return $this;
     }
 
-    public function key(string $key)
+    public function key(string $key): self
     {
         $this->key = $key;
 
         return $this;
     }
 
-    public function timespanInSeconds(int $timespanInSeconds)
+    public function timespanInSeconds(int $timespanInSeconds): self
     {
         $this->timeSpanInSeconds = $timespanInSeconds;
 
         return $this;
     }
 
-    public function allow(int $allowedNumberOfJobsInTimeSpan)
+    public function allow(int $allowedNumberOfJobsInTimeSpan): self
     {
         $this->allowedNumberOfJobsInTimeSpan = $allowedNumberOfJobsInTimeSpan;
 
         return $this;
     }
 
-    public function everySecond(int $timespanInSeconds = 1)
+    public function everySecond(int $timespanInSeconds = 1): self
     {
         $this->timeSpanInSeconds = $timespanInSeconds;
 
         return $this;
     }
 
-    public function everySeconds(int $timespanInSeconds)
+    public function everySeconds(int $timespanInSeconds): self
     {
         return $this->everySecond($timespanInSeconds);
     }
 
-    public function everyMinute(int $timespanInMinutes = 1)
+    public function everyMinute(int $timespanInMinutes = 1): self
     {
         return $this->everySecond($timespanInMinutes * 60);
     }
 
-    public function everyMinutes(int $timespanInMinutes)
+    public function everyMinutes(int $timespanInMinutes): self
     {
         return $this->everySecond($timespanInMinutes * 60);
     }
 
-    public function releaseAfterOneSecond()
+    public function releaseAfterOneSecond(): self
     {
         return $this->releaseAfterSeconds(1);
     }
 
-    public function releaseAfterSeconds(int $releaseInSeconds)
+    public function releaseAfterSeconds(int $releaseInSeconds): self
     {
         $this->releaseInSeconds = $releaseInSeconds;
 
         return $this;
     }
 
-    public function releaseAfterOneMinute()
+    public function releaseAfterOneMinute(): self
     {
         return $this->releaseAfterMinutes(1);
     }
 
-    public function releaseAfterMinutes(int $releaseInMinutes)
+    public function releaseAfterMinutes(int $releaseInMinutes): self
     {
         return $this->releaseAfterSeconds($releaseInMinutes * 60);
     }
 
-    public function releaseAfterRandomSeconds(int $min = 1, int $max = 10)
+    public function releaseAfterRandomSeconds(int $min = 1, int $max = 10): self
     {
         $this->releaseRandomSeconds = [$min, $max];
 
         return $this;
     }
 
-    public function releaseAfterBackoff(int $attemptedCount, int $backoffRate = 2)
+    public function releaseAfterBackoff(int $attemptedCount, int $backoffRate = 2): self
     {
         $releaseAfterSeconds = 0;
         $interval = $this->releaseInSeconds;
@@ -146,16 +139,27 @@ class RateLimited
         return $this->releaseInSeconds;
     }
 
-    public function handle($job, $next)
+    public function handle($job, Closure $next): void
     {
         if ($this->enabled instanceof Closure) {
             $this->enabled = (bool) $this->enabled();
         }
 
         if (! $this->enabled) {
-            return $next($job);
+            $next($job);
+            return;
         }
 
+        if ($this->useRedis) {
+            $this->handleRedis($job, $next);
+            return;
+        }
+
+        $this->handleCache($job, $next);
+    }
+
+    private function handleRedis($job, $next): void
+    {
         Redis::connection($this->connectionName)
             ->throttle($this->key)
             ->block(0)
@@ -166,5 +170,20 @@ class RateLimited
             }, function () use ($job) {
                 $job->release($this->releaseDuration());
             });
+    }
+
+    private function handleCache($job, $next): void
+    {
+        $hits = Cache::store($this->connectionName)->pull($this->key, 0) + 1;
+
+        Cache::store($this->connectionName)
+            ->put($this->key, $hits, now()->addSeconds($this->timeSpanInSeconds));
+
+        if ($hits <= $this->allowedNumberOfJobsInTimeSpan) {
+            $next($job);
+            return;
+        }
+
+        $job->release($this->releaseDuration());
     }
 }
