@@ -3,8 +3,8 @@
 namespace Spatie\RateLimitedMiddleware;
 
 use Closure;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class RateLimited
 {
@@ -147,11 +147,13 @@ class RateLimited
 
         if (! $this->enabled) {
             $next($job);
+
             return;
         }
 
         if ($this->useRedis) {
             $this->handleRedis($job, $next);
+
             return;
         }
 
@@ -181,6 +183,7 @@ class RateLimited
 
         if ($hits <= $this->allowedNumberOfJobsInTimeSpan) {
             $next($job);
+
             return;
         }
 

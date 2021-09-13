@@ -13,7 +13,7 @@ const CALLS_ALLOWED = 2;
 
 uses(CreatesApplication::class);
 
-dataset('middlewares', fn() => [
+dataset('middlewares', fn () => [
     'Redis' => (new RateLimited())
         ->allow(CALLS_ALLOWED)
         ->everySeconds(5),
@@ -42,7 +42,6 @@ beforeEach(function () {
     $this->next = function ($job) {
         $job->fire();
     };
-
 })->createApplication();
 
 test('limits job execution', function (RateLimited $middleware) {
@@ -54,13 +53,13 @@ test('limits job execution', function (RateLimited $middleware) {
     }
 })->with('middlewares');
 
-test('does nothing when disabled', function(RateLimited $middleware) {
+test('does nothing when disabled', function (RateLimited $middleware) {
     $this->job->shouldReceive('fire')->times(1);
 
     $middleware->enabled(false)->handle($this->job, $this->next);
 })->with('middlewares');
 
-test('release can be set with random seconds', function(RateLimited $middleware) {
+test('release can be set with random seconds', function (RateLimited $middleware) {
     $this->job->shouldReceive('fire')->times(2);
     $this->job->shouldReceive('release')->times(1)->with(1);
 
@@ -70,7 +69,7 @@ test('release can be set with random seconds', function(RateLimited $middleware)
     }
 })->with('middlewares');
 
-test('release can be set with exponential backoff', function(RateLimited $middleware) {
+test('release can be set with exponential backoff', function (RateLimited $middleware) {
     $this->job->shouldReceive('fire')->times(2);
     $this->job->shouldReceive('release')->with(15)->times(1);
     $this->job->shouldReceive('release')->with(31)->times(1);
@@ -84,7 +83,7 @@ test('release can be set with exponential backoff', function(RateLimited $middle
     }
 })->with('middlewares');
 
-test('release can be set with custom exponential backoff rate', function(RateLimited $middleware) {
+test('release can be set with custom exponential backoff rate', function (RateLimited $middleware) {
     $this->job->shouldReceive('fire')->times(2);
     $this->job->shouldReceive('release')->with(40)->times(1);
     $this->job->shouldReceive('release')->with(121)->times(1);
