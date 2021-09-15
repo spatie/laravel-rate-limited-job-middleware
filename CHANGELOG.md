@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.0.0 - 2021-09-15
+
+- allow for a cache option + PHP 8 only + Pest (#32)
+
+The API hasn't changed, so you could upgrade without having to change your code.
+
 ## 1.5.0 - 2020-11-27
 
 - add support for PHP 8
