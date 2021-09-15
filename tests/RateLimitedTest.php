@@ -6,123 +6,93 @@ use Illuminate\Redis\Connections\Connection;
 use Illuminate\Redis\Limiters\DurationLimiterBuilder;
 use Illuminate\Support\Facades\Redis;
 use Mockery;
-use Orchestra\Testbench\TestCase;
+use Orchestra\Testbench\Concerns\CreatesApplication;
 use Spatie\RateLimitedMiddleware\RateLimited;
 
-class RateLimitedTest extends TestCase
-{
-    /** @var \Closure */
-    private $next;
+const CALLS_ALLOWED = 2;
 
-    /** @var \Mockery\Mock */
-    private $job;
+uses(CreatesApplication::class);
 
-    /** @var \Mockery\Mock */
-    private $redis;
+dataset('middlewares', fn () => [
+    'Redis' => (new RateLimited())
+        ->allow(CALLS_ALLOWED)
+        ->everySeconds(5),
+    'Cache' => (new RateLimited(useRedis: false))
+        ->allow(CALLS_ALLOWED)
+        ->everySeconds(5),
+]);
 
-    /** @var int */
-    private $callsAllowed;
+beforeEach(function () {
+    $this->callsAllowed = CALLS_ALLOWED;
+    $this->redis = Mockery::mock(Connection::class);
 
-    /** @var \Spatie\RateLimitedMiddleware\RateLimited */
-    private $middleware;
+    $this->redis->shouldReceive('throttle')->andReturn(new DurationLimiterBuilder($this->redis, 'key'));
+    $this->redis->shouldReceive('eval')->andReturnUsing(function () {
+        return [
+            $this->callsAllowed > 0,
+            strtotime('5 seconds'),
+            $this->callsAllowed--,
+        ];
+    });
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+    Redis::shouldReceive('connection')->andReturn($this->redis);
 
-        $this->callsAllowed = 2;
+    $this->job = Mockery::mock();
 
-        $this->mockRedis();
-        $this->mockJob();
+    $this->next = function ($job) {
+        $job->fire();
+    };
+})->createApplication();
 
-        $this->middleware = new RateLimited();
+test('limits job execution', function (RateLimited $middleware) {
+    $this->job->shouldReceive('fire')->times(2);
+    $this->job->shouldReceive('release')->times(3);
+
+    foreach (range(1, 5) as $i) {
+        $middleware->handle($this->job, $this->next);
     }
+})->with('middlewares');
 
-    /** @test */
-    public function it_limits_job_execution()
-    {
-        $this->job->shouldReceive('fire')->times(2);
-        $this->job->shouldReceive('release')->times(3);
+test('does nothing when disabled', function (RateLimited $middleware) {
+    $this->job->shouldReceive('fire')->times(1);
 
-        foreach (range(1, 5) as $i) {
-            $this->middleware->handle($this->job, $this->next);
-        }
+    $middleware->enabled(false)->handle($this->job, $this->next);
+})->with('middlewares');
+
+test('release can be set with random seconds', function (RateLimited $middleware) {
+    $this->job->shouldReceive('fire')->times(2);
+    $this->job->shouldReceive('release')->times(1)->with(1);
+
+    foreach (range(1, 3) as $i) {
+        $middleware->releaseAfterRandomSeconds(1, 1)
+            ->handle($this->job, $this->next);
     }
+})->with('middlewares');
 
-    /** @test */
-    public function it_does_nothing_when_disabled()
-    {
-        $this->job->shouldReceive('fire')->times(1);
+test('release can be set with exponential backoff', function (RateLimited $middleware) {
+    $this->job->shouldReceive('fire')->times(2);
+    $this->job->shouldReceive('release')->with(15)->times(1);
+    $this->job->shouldReceive('release')->with(31)->times(1);
+    $this->job->shouldReceive('release')->with(63)->times(1);
 
-        $this->middleware->enabled(false)->handle($this->job, $this->next);
+    foreach (range(1, 5) as $attempts) {
+        $middleware
+            ->releaseAfterSeconds(1)
+            ->releaseAfterBackoff($attempts)
+            ->handle($this->job, $this->next);
     }
+})->with('middlewares');
 
-    /** @test */
-    public function release_can_be_set_with_random_seconds()
-    {
-        $this->job->shouldReceive('fire')->times(2);
-        $this->job->shouldReceive('release')->times(1)->with(1);
+test('release can be set with custom exponential backoff rate', function (RateLimited $middleware) {
+    $this->job->shouldReceive('fire')->times(2);
+    $this->job->shouldReceive('release')->with(40)->times(1);
+    $this->job->shouldReceive('release')->with(121)->times(1);
+    $this->job->shouldReceive('release')->with(364)->times(1);
 
-        foreach (range(1, 3) as $i) {
-            $this->middleware->releaseAfterRandomSeconds(1, 1)
-                ->handle($this->job, $this->next);
-        }
+    foreach (range(1, 5) as $attempts) {
+        $middleware
+            ->releaseAfterSeconds(1)
+            ->releaseAfterBackoff($attempts, 3)
+            ->handle($this->job, $this->next);
     }
-
-    /** @test */
-    public function release_can_be_set_with_exponential_backoff()
-    {
-        $this->job->shouldReceive('fire')->times(2);
-        $this->job->shouldReceive('release')->with(15)->times(1);
-        $this->job->shouldReceive('release')->with(31)->times(1);
-        $this->job->shouldReceive('release')->with(63)->times(1);
-
-        foreach (range(1, 5) as $attempts) {
-            $this->middleware
-                ->releaseAfterSeconds(1)
-                ->releaseAfterBackoff($attempts)
-                ->handle($this->job, $this->next);
-        }
-    }
-
-    /** @test */
-    public function release_can_be_set_with_custom_exponential_backoff_rate()
-    {
-        $this->job->shouldReceive('fire')->times(2);
-        $this->job->shouldReceive('release')->with(40)->times(1);
-        $this->job->shouldReceive('release')->with(121)->times(1);
-        $this->job->shouldReceive('release')->with(364)->times(1);
-
-        foreach (range(1, 5) as $attempts) {
-            $this->middleware
-                ->releaseAfterSeconds(1)
-                ->releaseAfterBackoff($attempts, 3)
-                ->handle($this->job, $this->next);
-        }
-    }
-
-    private function mockRedis(): void
-    {
-        $this->redis = Mockery::mock(Connection::class);
-
-        $this->redis->shouldReceive('throttle')->andReturn(new DurationLimiterBuilder($this->redis, 'key'));
-        $this->redis->shouldReceive('eval')->andReturnUsing(function () {
-            return [
-                $this->callsAllowed > 0,
-                strtotime('10 seconds'),
-                $this->callsAllowed--,
-            ];
-        });
-
-        Redis::shouldReceive('connection')->andReturn($this->redis);
-    }
-
-    private function mockJob(): void
-    {
-        $this->job = Mockery::mock();
-
-        $this->next = function ($job) {
-            $job->fire();
-        };
-    }
-}
+})->with('middlewares');
