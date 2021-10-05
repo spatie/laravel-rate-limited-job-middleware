@@ -4,7 +4,6 @@ namespace Spatie\RateLimitedMiddleware;
 
 use Closure;
 use Illuminate\Cache\RateLimiter;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 class RateLimited
@@ -182,7 +181,7 @@ class RateLimited
         $result = $rateLimiter->attempt(
             $this->key,
             $this->allowedNumberOfJobsInTimeSpan,
-            fn() => $next($job),
+            fn () => $next($job),
             $this->timeSpanInSeconds
         );
 
