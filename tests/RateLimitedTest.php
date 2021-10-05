@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redis;
 use Mockery;
 use Orchestra\Testbench\Concerns\CreatesApplication;
 use Spatie\RateLimitedMiddleware\RateLimited;
+use function Spatie\PestPluginTestTime\testTime;
 
 const CALLS_ALLOWED = 2;
 
@@ -16,13 +17,15 @@ uses(CreatesApplication::class);
 dataset('middlewares', fn () => [
     'Redis' => (new RateLimited())
         ->allow(CALLS_ALLOWED)
-        ->everySeconds(5),
+        ->everySeconds(1),
     'Cache' => (new RateLimited(useRedis: false))
         ->allow(CALLS_ALLOWED)
-        ->everySeconds(5),
+        ->everySeconds(1),
 ]);
 
 beforeEach(function () {
+    config()->set('cache.default', 'file');
+
     $this->callsAllowed = CALLS_ALLOWED;
     $this->redis = Mockery::mock(Connection::class);
 
@@ -30,7 +33,7 @@ beforeEach(function () {
     $this->redis->shouldReceive('eval')->andReturnUsing(function () {
         return [
             $this->callsAllowed > 0,
-            strtotime('5 seconds'),
+            strtotime('1 seconds'),
             $this->callsAllowed--,
         ];
     });
@@ -49,6 +52,20 @@ test('limits job execution', function (RateLimited $middleware) {
     $this->job->shouldReceive('release')->times(3);
 
     foreach (range(1, 5) as $i) {
+        $middleware->handle($this->job, $this->next);
+    }
+})->with('middlewares');
+
+test('limits job execution with ms precision', function (RateLimited $middleware) {
+    testTime()
+        ->startOfSecond()
+        ->freeze();
+
+    $this->job->shouldReceive('fire')->times(2);
+    $this->job->shouldReceive('release')->times(3);
+
+    foreach (range(1, 5) as $i) {
+        testTime()->addMilliseconds(250);
         $middleware->handle($this->job, $this->next);
     }
 })->with('middlewares');

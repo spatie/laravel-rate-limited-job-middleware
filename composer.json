@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "illuminate/cache": "^8.62",
+        "illuminate/cache": "^6.0|^7.0|^8.0",
         "illuminate/redis": "^6.0|^7.0|^8.0"
     },
     "require-dev": {
@@ -26,6 +26,7 @@
         "pestphp/pest": "^1.18",
         "pestphp/pest-plugin-laravel": "^1.1",
         "phpunit/phpunit": "^8.2|^9.0",
+        "spatie/pest-plugin-test-time": "^1.0",
         "symfony/var-dumper": "^4.3|^5.0"
     },
     "autoload": {
