@@ -3,7 +3,6 @@
 namespace Spatie\RateLimitedMiddleware;
 
 use Closure;
-use Illuminate\Cache\RateLimiter;
 use Illuminate\Support\Facades\Redis;
 
 class RateLimited
