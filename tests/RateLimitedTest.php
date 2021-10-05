@@ -4,6 +4,7 @@ namespace Spatie\RateLimitedMiddleware\Tests;
 
 use Illuminate\Redis\Connections\Connection;
 use Illuminate\Redis\Limiters\DurationLimiterBuilder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Mockery;
 use Orchestra\Testbench\Concerns\CreatesApplication;
@@ -24,7 +25,9 @@ dataset('middlewares', fn () => [
 ]);
 
 beforeEach(function () {
+    testTime()->freeze();
     config()->set('cache.default', 'file');
+    Cache::flush();
 
     $this->callsAllowed = CALLS_ALLOWED;
     $this->redis = Mockery::mock(Connection::class);
