@@ -177,7 +177,7 @@ class RateLimited
 
     private function handleCache($job, $next): void
     {
-        $rateLimiter = app(RateLimiter::class);
+        $rateLimiter = app(HighPrecisionRateLimiter::class);
 
         $result = $rateLimiter->attempt(
             $this->key,
