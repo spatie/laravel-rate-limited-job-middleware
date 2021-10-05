@@ -3,6 +3,7 @@
 namespace Spatie\RateLimitedMiddleware;
 
 use Closure;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
@@ -176,14 +177,16 @@ class RateLimited
 
     private function handleCache($job, $next): void
     {
-        $hits = Cache::store($this->connectionName)->pull($this->key, 0) + 1;
+        $rateLimiter = app(RateLimiter::class);
 
-        Cache::store($this->connectionName)
-            ->put($this->key, $hits, now()->addSeconds($this->timeSpanInSeconds));
+        $result = $rateLimiter->attempt(
+            $this->key,
+            $this->allowedNumberOfJobsInTimeSpan,
+            fn() => $next($job),
+            $this->timeSpanInSeconds
+        );
 
-        if ($hits <= $this->allowedNumberOfJobsInTimeSpan) {
-            $next($job);
-
+        if ($result) {
             return;
         }
 

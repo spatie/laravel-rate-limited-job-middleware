@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "illuminate/cache": "^8.62",
         "illuminate/redis": "^6.0|^7.0|^8.0"
     },
     "require-dev": {
