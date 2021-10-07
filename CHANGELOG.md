@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.1.0 - 2021-10-07
+
+- Improve the cache implementation using a leaky bucket rate limiter.
+
 ## 2.0.0 - 2021-09-15
 
 - allow for a cache option + PHP 8 only + Pest (#32)

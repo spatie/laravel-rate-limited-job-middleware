@@ -2,7 +2,10 @@
 
 namespace Spatie\RateLimitedMiddleware;
 
+use ArtisanSdk\RateLimiter\Buckets\Leaky;
+use ArtisanSdk\RateLimiter\Limiter;
 use Closure;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 class RateLimited
@@ -175,19 +178,19 @@ class RateLimited
 
     private function handleCache($job, $next): void
     {
-        $rateLimiter = app(HighPrecisionRateLimiter::class);
-
-        $result = $rateLimiter->attempt(
-            $this->key,
-            $this->allowedNumberOfJobsInTimeSpan,
-            fn () => $next($job),
-            $this->timeSpanInSeconds
+        $bucket = new Leaky(
+            key: $this->key,
+            max: $this->allowedNumberOfJobsInTimeSpan,
+            rate: $this->allowedNumberOfJobsInTimeSpan / $this->timeSpanInSeconds,
         );
+        $limiter = new Limiter(Cache::store(), $bucket);
 
-        if ($result) {
+        if ($limiter->exceeded()) {
+            $job->release($this->releaseDuration());
             return;
         }
 
-        $job->release($this->releaseDuration());
+        $limiter->hit();
+        $next($job);
     }
 }

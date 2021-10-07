@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "artisansdk/ratelimiter": "^1.0@RC",
         "illuminate/cache": "^6.0|^7.0|^8.0",
         "illuminate/redis": "^6.0|^7.0|^8.0"
     },

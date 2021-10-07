@@ -59,20 +59,6 @@ test('limits job execution', function (RateLimited $middleware) {
     }
 })->with('middlewares');
 
-test('limits job execution with ms precision', function (RateLimited $middleware) {
-    testTime()
-        ->startOfSecond()
-        ->freeze();
-
-    $this->job->shouldReceive('fire')->times(2);
-    $this->job->shouldReceive('release')->times(3);
-
-    foreach (range(1, 5) as $i) {
-        testTime()->addMilliseconds(250);
-        $middleware->handle($this->job, $this->next);
-    }
-})->with('middlewares');
-
 test('does nothing when disabled', function (RateLimited $middleware) {
     $this->job->shouldReceive('fire')->times(1);
 
