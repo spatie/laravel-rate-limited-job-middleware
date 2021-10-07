@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.1.1 - 2021-10-07
+
+- Fix missing timeout on limiter
+
 ## 2.1.0 - 2021-10-07
 
 - Improve the cache implementation using a leaky bucket rate limiter.
