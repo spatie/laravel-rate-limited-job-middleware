@@ -187,6 +187,7 @@ class RateLimited
 
         if ($limiter->exceeded()) {
             $job->release($this->releaseDuration());
+
             return;
         }
 
