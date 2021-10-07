@@ -189,6 +189,7 @@ class RateLimited
             $job->release($this->releaseDuration());
 
             $limiter->timeout($bucket->duration());
+
             return;
         }
 
