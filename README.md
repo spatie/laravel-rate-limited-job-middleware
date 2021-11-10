@@ -74,7 +74,7 @@ public function retryUntil() :  \DateTime
 
 ### Customizing the behaviour
 
-You can customize all the behaviour. Here's an example where the middleware allows a maximum of 30 jobs to performed in a timespan off 60 seconds. Jobs that are not allowed will be released for 90 seconds.
+You can customize all the behaviour. Here's an example where the middleware allows a maximum of 30 jobs to performed in a timespan of 60 seconds. Jobs that are not allowed will be released for 90 seconds.
 
 ```php
 // in your job
