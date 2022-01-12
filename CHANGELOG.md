@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.2.0 - 2022-01-12
+
+## What's Changed
+
+- 'off' => 'of' by @edalzell in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/33
+- Allow Laravel 9
+
+## New Contributors
+
+- @edalzell made their first contribution in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/33
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.1.1...2.2.0
+
 ## 2.1.1 - 2021-10-07
 
 - Fix missing timeout on limiter
