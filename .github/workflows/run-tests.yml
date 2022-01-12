@@ -1,25 +1,24 @@
 name: run-tests
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        php: [8.0]
+        php: [8.0, 8.1]
         laravel: [9.*, 8.*]
+        dependency-version: [prefer-lowest, prefer-stable]
         include:
           - laravel: 9.*
-            testbench: 7.*
+            testbench: ^7.0
           - laravel: 8.*
-            testbench: 6.*
-          - laravel: 7.*
-            testbench: 5.*
+            testbench: ^6.23
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
     steps:
       - name: Checkout code
@@ -32,20 +31,15 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
           coverage: none
 
-      - name: Start Redis
-        uses: supercharge/redis-github-action@1.1.0
-        with:
-          redis-version: 5
-
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --prefer-dist --no-interaction
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
 
       -   name: Setup Problem Matches
           run: |
-              echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-              echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+            echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+            echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Execute tests
-        run: vendor/bin/pest
+        run: vendor/bin/phpunit
