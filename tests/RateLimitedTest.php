@@ -102,3 +102,7 @@ test('release can be set with custom exponential backoff rate', function (RateLi
             ->handle($this->job, $this->next);
     }
 })->with('middlewares');
+
+test('release after backoff can handle large number of attempts', function () {
+    expect((new RateLimited())->releaseAfterBackoff(60))->toBeInstanceOf(RateLimited::class);
+});
