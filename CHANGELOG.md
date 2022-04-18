@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.2.1 - 2022-04-18
+
+## What's Changed
+
+- Fix "`$releaseInSeconds` must be of type int" exception by @stevebauman in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/37
+
+## New Contributors
+
+- @stevebauman made their first contribution in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/37
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.2.0...2.2.1
+
 ## 2.2.0 - 2022-01-12
 
 ## What's Changed
