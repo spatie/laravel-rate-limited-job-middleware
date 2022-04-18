@@ -129,7 +129,7 @@ class RateLimited
             $releaseAfterSeconds += $interval * pow($backoffRate, $attempt);
         }
 
-        return $this->releaseAfterSeconds($releaseAfterSeconds);
+        return $this->releaseAfterSeconds((int) $releaseAfterSeconds);
     }
 
     protected function releaseDuration(): int
