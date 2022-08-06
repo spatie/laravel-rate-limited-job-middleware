@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.2.2 - 2022-08-06
+
+### What's Changed
+
+- Allow release logic to be easily extended by @Sammyjo20 in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/38
+
+### New Contributors
+
+- @Sammyjo20 made their first contribution in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/38
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.2.1...2.2.2
+
 ## 2.2.1 - 2022-04-18
 
 ## What's Changed
