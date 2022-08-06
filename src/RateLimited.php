@@ -172,7 +172,7 @@ class RateLimited
             ->then(function () use ($job, $next) {
                 $next($job);
             }, function () use ($job) {
-                $job->release($this->releaseDuration());
+                $this->releaseJob($job);
             });
     }
 
@@ -186,7 +186,7 @@ class RateLimited
         $limiter = new Limiter(Cache::store(), $bucket);
 
         if ($limiter->exceeded()) {
-            $job->release($this->releaseDuration());
+            $this->releaseJob($job);
 
             $limiter->timeout($bucket->duration());
 
@@ -195,5 +195,10 @@ class RateLimited
 
         $limiter->hit();
         $next($job);
+    }
+
+    protected function releaseJob($job): void
+    {
+        $job->release($this->releaseDuration());
     }
 }
