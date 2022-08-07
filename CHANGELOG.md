@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.2.3 - 2022-08-07
+
+### What's Changed
+
+- Changed method return type to static by @Sammyjo20 in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/39
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.2.2...2.2.3
+
 ## 2.2.2 - 2022-08-06
 
 ### What's Changed
