@@ -35,93 +35,93 @@ class RateLimited
         $this->useRedis = $useRedis;
     }
 
-    public function enabled(bool|Closure $enabled = true): self
+    public function enabled(bool|Closure $enabled = true): static
     {
         $this->enabled = $enabled;
 
         return $this;
     }
 
-    public function connectionName(string $connectionName): self
+    public function connectionName(string $connectionName): static
     {
         $this->connectionName = $connectionName;
 
         return $this;
     }
 
-    public function key(string $key): self
+    public function key(string $key): static
     {
         $this->key = $key;
 
         return $this;
     }
 
-    public function timespanInSeconds(int $timespanInSeconds): self
+    public function timespanInSeconds(int $timespanInSeconds): static
     {
         $this->timeSpanInSeconds = $timespanInSeconds;
 
         return $this;
     }
 
-    public function allow(int $allowedNumberOfJobsInTimeSpan): self
+    public function allow(int $allowedNumberOfJobsInTimeSpan): static
     {
         $this->allowedNumberOfJobsInTimeSpan = $allowedNumberOfJobsInTimeSpan;
 
         return $this;
     }
 
-    public function everySecond(int $timespanInSeconds = 1): self
+    public function everySecond(int $timespanInSeconds = 1): static
     {
         $this->timeSpanInSeconds = $timespanInSeconds;
 
         return $this;
     }
 
-    public function everySeconds(int $timespanInSeconds): self
+    public function everySeconds(int $timespanInSeconds): static
     {
         return $this->everySecond($timespanInSeconds);
     }
 
-    public function everyMinute(int $timespanInMinutes = 1): self
+    public function everyMinute(int $timespanInMinutes = 1): static
     {
         return $this->everySecond($timespanInMinutes * 60);
     }
 
-    public function everyMinutes(int $timespanInMinutes): self
+    public function everyMinutes(int $timespanInMinutes): static
     {
         return $this->everySecond($timespanInMinutes * 60);
     }
 
-    public function releaseAfterOneSecond(): self
+    public function releaseAfterOneSecond(): static
     {
         return $this->releaseAfterSeconds(1);
     }
 
-    public function releaseAfterSeconds(int $releaseInSeconds): self
+    public function releaseAfterSeconds(int $releaseInSeconds): static
     {
         $this->releaseInSeconds = $releaseInSeconds;
 
         return $this;
     }
 
-    public function releaseAfterOneMinute(): self
+    public function releaseAfterOneMinute(): static
     {
         return $this->releaseAfterMinutes(1);
     }
 
-    public function releaseAfterMinutes(int $releaseInMinutes): self
+    public function releaseAfterMinutes(int $releaseInMinutes): static
     {
         return $this->releaseAfterSeconds($releaseInMinutes * 60);
     }
 
-    public function releaseAfterRandomSeconds(int $min = 1, int $max = 10): self
+    public function releaseAfterRandomSeconds(int $min = 1, int $max = 10): static
     {
         $this->releaseRandomSeconds = [$min, $max];
 
         return $this;
     }
 
-    public function releaseAfterBackoff(int $attemptedCount, int $backoffRate = 2): self
+    public function releaseAfterBackoff(int $attemptedCount, int $backoffRate = 2): static
     {
         $releaseAfterSeconds = 0;
         $interval = $this->releaseInSeconds;
