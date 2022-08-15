@@ -20,10 +20,10 @@ uses(CreatesApplication::class);
 dataset('middlewares', fn () => [
     'Redis' => (new RateLimited())
         ->allow(CALLS_ALLOWED)
-        ->everySeconds(1),
+        ->everySeconds(10),
     'Cache' => (new RateLimited(useRedis: false))
         ->allow(CALLS_ALLOWED)
-        ->everySeconds(1),
+        ->everySeconds(10),
 ]);
 
 beforeEach(function () {

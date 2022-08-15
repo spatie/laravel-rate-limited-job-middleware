@@ -181,7 +181,7 @@ class RateLimited
         $bucket = new Leaky(
             key: $this->key,
             max: $this->allowedNumberOfJobsInTimeSpan,
-            rate: $this->allowedNumberOfJobsInTimeSpan / $this->timeSpanInSeconds / 60,
+            rate: $this->allowedNumberOfJobsInTimeSpan / $this->timeSpanInSeconds,
         );
         $limiter = new Limiter(Cache::store(), $bucket);
 
