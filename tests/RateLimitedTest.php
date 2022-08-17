@@ -20,15 +20,15 @@ uses(CreatesApplication::class);
 dataset('middlewares', fn () => [
     'Redis' => (new RateLimited())
         ->allow(CALLS_ALLOWED)
-        ->everySeconds(10),
+        ->everySeconds(1),
     'Cache' => (new RateLimited(useRedis: false))
         ->allow(CALLS_ALLOWED)
-        ->everySeconds(10),
+        ->everySeconds(1),
 ]);
 
 beforeEach(function () {
     testTime()->freeze();
-    config()->set('cache.default', 'file');
+    config()->set('cache.default', 'array');
     Cache::flush();
 
     $this->callsAllowed = CALLS_ALLOWED;
