@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.2.6 - 2022-11-02
+
+- Fix implicit float to int casting
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.2.5...2.2.6
+
 ## 2.2.5 - 2022-08-17
 
 - Use v1 of artisansdk/ratelimiter
