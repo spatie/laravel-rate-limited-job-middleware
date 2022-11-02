@@ -188,7 +188,7 @@ class RateLimited
         if ($limiter->exceeded()) {
             $this->releaseJob($job);
 
-            $limiter->timeout($bucket->duration());
+            $limiter->timeout((int) $bucket->duration());
 
             return;
         }
