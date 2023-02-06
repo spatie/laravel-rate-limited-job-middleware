@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.2.7 - 2023-02-06
+
+### What's Changed
+
+- Add PHP 8.2 Support by @patinthehat in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/42
+- Laravel 10.x Compatibility by @laravel-shift in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/43
+
+### New Contributors
+
+- @patinthehat made their first contribution in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/42
+- @laravel-shift made their first contribution in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/43
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.2.6...2.2.7
+
 ## 2.2.6 - 2022-11-02
 
 - Fix implicit float to int casting
