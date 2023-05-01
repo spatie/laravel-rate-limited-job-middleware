@@ -61,6 +61,17 @@ test('limits job execution', function (RateLimited $middleware) {
     }
 })->with('middlewares');
 
+test('limits job execution but does not release', function (RateLimited $middleware) {
+	$middleware->dontRelease();
+	
+    $this->job->shouldReceive('fire')->times(2);
+    $this->job->shouldReceive('release')->never();
+
+    foreach (range(1, 5) as $i) {
+        $middleware->handle($this->job, $this->next);
+    }
+})->with('middlewares');
+
 test('does nothing when disabled', function (RateLimited $middleware) {
     $this->job->shouldReceive('fire')->times(1);
 
