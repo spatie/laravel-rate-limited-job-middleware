@@ -166,6 +166,22 @@ public function middleware()
 }
 ```
 
+### Not releasing jobs
+
+If you don't want to retry a job when it is ratelimited, you can use the `dontRelease()` method. This is useful in situations where you have jobs that run periodically and you don't care about a job being skipped.  
+
+```php
+public function middleware()
+{
+    $rateLimitedMiddleware = (new RateLimited())
+        ->allow(30)
+        ->everySeconds(60)
+        ->dontRelease();
+
+    return [$rateLimitedMiddleware];
+}
+```
+
 ### Customizing Redis
 
 By default, the middleware will use the default Redis connection. 

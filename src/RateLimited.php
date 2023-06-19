@@ -15,6 +15,8 @@ class RateLimited
     protected string $connectionName = '';
 
     protected string $key;
+	
+	protected bool $dontRelease = false;
 
     protected int $timeSpanInSeconds = 1;
 
@@ -52,6 +54,13 @@ class RateLimited
     public function key(string $key): static
     {
         $this->key = $key;
+
+        return $this;
+    }
+
+    public function dontRelease(bool $dontRelease = true): static
+    {
+        $this->dontRelease = $dontRelease;
 
         return $this;
     }
@@ -199,6 +208,10 @@ class RateLimited
 
     protected function releaseJob($job): void
     {
+		if ($this->dontRelease) {
+			return;
+		}
+		
         $job->release($this->releaseDuration());
     }
 }
