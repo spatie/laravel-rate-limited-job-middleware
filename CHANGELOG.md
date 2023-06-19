@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.3.0 - 2023-06-19
+
+### What's Changed
+
+- Add `->dontRelease()` method by @ralphjsmit in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/48
+
+### New Contributors
+
+- @ralphjsmit made their first contribution in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/48
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.2.7...2.3.0
+
 ## 2.2.7 - 2023-02-06
 
 ### What's Changed
