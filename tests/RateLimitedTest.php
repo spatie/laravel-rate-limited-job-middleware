@@ -62,8 +62,8 @@ test('limits job execution', function (RateLimited $middleware) {
 })->with('middlewares');
 
 test('limits job execution but does not release', function (RateLimited $middleware) {
-	$middleware->dontRelease();
-	
+    $middleware->dontRelease();
+
     $this->job->shouldReceive('fire')->times(2);
     $this->job->shouldReceive('release')->never();
 

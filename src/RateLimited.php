@@ -15,8 +15,8 @@ class RateLimited
     protected string $connectionName = '';
 
     protected string $key;
-	
-	protected bool $dontRelease = false;
+
+    protected bool $dontRelease = false;
 
     protected int $timeSpanInSeconds = 1;
 
@@ -208,10 +208,10 @@ class RateLimited
 
     protected function releaseJob($job): void
     {
-		if ($this->dontRelease) {
-			return;
-		}
-		
+        if ($this->dontRelease) {
+            return;
+        }
+
         $job->release($this->releaseDuration());
     }
 }
