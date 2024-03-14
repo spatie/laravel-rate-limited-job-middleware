@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.4.0 - 2024-03-14
+
+### What's Changed
+
+* Laravel 11.x Compatibility by @laravel-shift in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/55
+* Use our own LeakyBucket class
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.3.0...2.4.0
+
 ## 2.3.0 - 2023-06-19
 
 ### What's Changed
