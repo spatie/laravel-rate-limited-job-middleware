@@ -21,8 +21,7 @@ class LeakyBucket
         protected string $key = 'default',
         protected int $max = 60,
         protected float|int $rate = 1,
-    )
-    {
+    ) {
         $bucket = Cache::get($this->key);
 
         $this->timeoutKey = "{$this->key}:timeout";
@@ -74,8 +73,8 @@ class LeakyBucket
         Cache::put(
             $this->key,
             [
-                'timer'     => $this->timer,
-                'drips'     => $this->drips,
+                'timer' => $this->timer,
+                'drips' => $this->drips,
             ],
             (int) max(1, ceil($this->duration())) // $ttl to $seconds conversion requires minimally 1s
         );
@@ -85,10 +84,13 @@ class LeakyBucket
 
     protected function duration(): float
     {
-        return (float) (max(0,
-            microtime(true)
-            + ($this->drips / $this->rate)
-            - $this->timer)
+        return (float) (
+            max(
+                0,
+                microtime(true)
+                + ($this->drips / $this->rate)
+                - $this->timer
+            )
         );
     }
 
