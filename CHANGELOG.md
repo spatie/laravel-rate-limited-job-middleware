@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.4.1 - 2024-05-08
+
+* Improve leaky bucket for our use case
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.4.0...2.4.1
+
 ## 2.4.0 - 2024-03-14
 
 ### What's Changed
