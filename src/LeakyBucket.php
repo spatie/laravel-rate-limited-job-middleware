@@ -15,16 +15,12 @@ class LeakyBucket
 
     protected float $timer = 0;
 
-    protected string $timeoutKey;
-
     public function __construct(
         protected string $key = 'default',
         protected int $max = 60,
         protected float|int $rate = 1,
     ) {
         $bucket = Cache::get($this->key);
-
-        $this->timeoutKey = "{$this->key}:timeout";
 
         if (! $bucket) {
             return;
@@ -36,34 +32,13 @@ class LeakyBucket
 
     public function isOverflowing(): bool
     {
-        if (Cache::has($this->timeoutKey)) {
-            return true;
-        }
-
         $this->leak();
 
         if ($this->drips >= $this->max) {
-            $this->timeout();
-
             return true;
         }
 
         return false;
-    }
-
-    protected function timeout(): void
-    {
-        if (Cache::has($this->timeoutKey)) {
-            return;
-        }
-
-        $duration = (int) $this->duration();
-
-        Cache::put(
-            $this->timeoutKey,
-            ((int) $this->timer) + $duration,
-            $duration
-        );
     }
 
     public function fill(): int
@@ -97,8 +72,10 @@ class LeakyBucket
     protected function leak(): self
     {
         $drips = $this->drips;
+        $originalTimer = $this->timer;
 
-        $elapsed = $this->reset()->timer - $this->timer;
+        $elapsed = $this->reset()->timer - $originalTimer;
+
         $drops = (int) floor($elapsed * $this->rate);
 
         $this->drips = $this->bounded($drips - $drops);
