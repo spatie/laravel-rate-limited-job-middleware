@@ -76,7 +76,7 @@ class LeakyBucket
         $drips = $this->drips;
         $originalTimer = $this->timer;
 
-        $elapsed = $this->reset()->timer - $originalTimer;
+        $elapsed = (clone $this)->reset()->timer - $originalTimer;
 
         $drops = (int) floor($elapsed * $this->rate);
 
