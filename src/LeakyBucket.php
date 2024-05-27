@@ -21,15 +21,8 @@ class LeakyBucket
         protected float|int $rate = 1,
     ) {
         $bucket = Cache::get($this->key);
-
-        if (! $bucket) {
-            $this->timer = microtime(true);
-
-            return;
-        }
-
-        $this->drips = $bucket['drips'];
-        $this->timer = $bucket['timer'];
+        $this->drips = $bucket['drips'] ?? 0;
+        $this->timer = $bucket['timer'] ?? microtime(true);
     }
 
     public function isOverflowing(): bool
@@ -47,6 +40,13 @@ class LeakyBucket
     {
         $this->drips++;
 
+        $this->store();
+
+        return $this->drips;
+    }
+
+    protected function store(): void
+    {
         Cache::put(
             $this->key,
             [
@@ -55,8 +55,6 @@ class LeakyBucket
             ],
             (int) max(1, ceil($this->duration())) // $ttl to $seconds conversion requires minimally 1s
         );
-
-        return $this->drips;
     }
 
     protected function duration(): float
@@ -74,13 +72,18 @@ class LeakyBucket
     protected function leak(): self
     {
         $drips = $this->drips;
-        $originalTimer = $this->timer;
 
-        $elapsed = (clone $this)->reset()->timer - $originalTimer;
+        $elapsed = microtime(true) - $this->timer;
 
         $drops = (int) floor($elapsed * $this->rate);
 
         $this->drips = $this->bounded($drips - $drops);
+
+        if ($drops > 0) {
+            $this->timer = microtime(true);
+        }
+
+        $this->store();
 
         return $this;
     }
@@ -88,13 +91,5 @@ class LeakyBucket
     protected function bounded(int $drips): int
     {
         return (int) max(0, min($this->max, $drips));
-    }
-
-    protected function reset(): self
-    {
-        $this->drips = 0;
-        $this->timer = microtime(true);
-
-        return $this;
     }
 }
