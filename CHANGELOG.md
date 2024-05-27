@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.4.4 - 2024-05-27
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.4.3...2.4.4
+
 ## 2.4.3 - 2024-05-27
 
 **Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.4.2...2.4.3
