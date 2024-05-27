@@ -23,6 +23,8 @@ class LeakyBucket
         $bucket = Cache::get($this->key);
 
         if (! $bucket) {
+            $this->timer = microtime(true);
+
             return;
         }
 
