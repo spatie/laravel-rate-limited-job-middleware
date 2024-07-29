@@ -242,6 +242,10 @@ These methods are available to be called on the middleware. Their names should b
 - `releaseAfterMinutes(int $releaseInMinutes)`
 - `releaseAfterRandomSeconds(int $min = 1, int $max = 10)`
 
+### Available events.
+
+- `\Spatie\RateLimitedMiddleware\Events\LimitExceeded` when the rate limit has been exceeded.
+
 ### Testing
 
 ``` bash
