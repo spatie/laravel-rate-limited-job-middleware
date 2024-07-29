@@ -8,7 +8,6 @@ class LimitExceeded
 {
     public function __construct(
         public ShouldQueue $job
-    )
-    {
+    ) {
     }
 }

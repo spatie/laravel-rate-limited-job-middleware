@@ -6,5 +6,4 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class TestJob implements ShouldQueue
 {
-
 }

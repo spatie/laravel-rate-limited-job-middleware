@@ -11,7 +11,6 @@ use Mockery;
 use Orchestra\Testbench\Concerns\CreatesApplication;
 
 use Spatie\RateLimitedMiddleware\Events\LimitExceeded;
-use function Spatie\PestPluginTestTime\testTime;
 
 use Spatie\RateLimitedMiddleware\RateLimited;
 
