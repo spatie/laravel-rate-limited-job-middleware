@@ -7,6 +7,7 @@ use ArtisanSdk\RateLimiter\Limiter;
 use Closure;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
+use Spatie\RateLimitedMiddleware\Events\LimitExceeded;
 
 class RateLimited
 {
@@ -206,6 +207,8 @@ class RateLimited
 
     protected function releaseJob($job): void
     {
+        event(new LimitExceeded($job));
+
         if ($this->dontRelease) {
             return;
         }

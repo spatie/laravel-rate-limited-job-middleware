@@ -5,10 +5,12 @@ namespace Spatie\RateLimitedMiddleware\Tests;
 use Illuminate\Redis\Connections\Connection;
 use Illuminate\Redis\Limiters\DurationLimiterBuilder;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Redis;
 use Mockery;
 use Orchestra\Testbench\Concerns\CreatesApplication;
 
+use Spatie\RateLimitedMiddleware\Events\LimitExceeded;
 use function Spatie\PestPluginTestTime\testTime;
 
 use Spatie\RateLimitedMiddleware\RateLimited;
@@ -27,7 +29,6 @@ dataset('middlewares', fn () => [
 ]);
 
 beforeEach(function () {
-    testTime()->freeze();
     config()->set('cache.default', 'array');
     Cache::flush();
 
@@ -45,11 +46,13 @@ beforeEach(function () {
 
     Redis::shouldReceive('connection')->andReturn($this->redis);
 
-    $this->job = Mockery::mock();
+    $this->job = Mockery::mock(TestJob::class);
 
     $this->next = function ($job) {
         $job->fire();
     };
+
+    Event::fake();
 })->createApplication();
 
 test('limits job execution', function (RateLimited $middleware) {
@@ -59,6 +62,8 @@ test('limits job execution', function (RateLimited $middleware) {
     foreach (range(1, 5) as $i) {
         $middleware->handle($this->job, $this->next);
     }
+
+    Event::assertDispatchedTimes(LimitExceeded::class, 3);
 })->with('middlewares');
 
 test('limits job execution but does not release', function (RateLimited $middleware) {
