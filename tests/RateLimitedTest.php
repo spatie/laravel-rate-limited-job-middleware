@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Redis;
 use Mockery;
 use Orchestra\Testbench\Concerns\CreatesApplication;
-
 use Spatie\RateLimitedMiddleware\Events\LimitExceeded;
-
 use Spatie\RateLimitedMiddleware\RateLimited;
 
 const CALLS_ALLOWED = 2;
