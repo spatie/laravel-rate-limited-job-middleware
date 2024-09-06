@@ -22,8 +22,6 @@ You can install the package via composer:
 composer require spatie/laravel-rate-limited-job-middleware
 ```
 
-This package requires Redis to be set up in your Laravel app.
-
 ## Usage
 
 By default, the middleware will only allow 5 jobs to be executed per second. Any jobs that are not allowed will be released for 5 seconds. 
