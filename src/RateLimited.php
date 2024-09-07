@@ -17,7 +17,7 @@ class RateLimited
 
     protected string $key;
 
-    protected bool $dontRelease = false;
+    protected bool|Closure $dontRelease = false;
 
     protected int $timeSpanInSeconds = 1;
 
@@ -59,7 +59,7 @@ class RateLimited
         return $this;
     }
 
-    public function dontRelease(bool $dontRelease = true): static
+    public function dontRelease(bool|Closure $dontRelease = true): static
     {
         $this->dontRelease = $dontRelease;
 
@@ -209,7 +209,11 @@ class RateLimited
     {
         event(new LimitExceeded($job));
 
-        if ($this->dontRelease) {
+        $dontRelease = is_callable($this->dontRelease)
+            ? $this->dontRelease()
+            : $this->dontRelease;
+
+        if ($dontRelease) {
             return;
         }
 
