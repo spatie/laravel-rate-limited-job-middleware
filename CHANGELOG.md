@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.7.0 - 2024-09-07
+
+* Add the option to pass a closure to determine if the job should release
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.6.0...2.7.0
+
 ## 2.6.0 - 2024-07-29
 
 - Add a new `LimitExceeded` event when the rate limit has exceeded which receives the `$job`
