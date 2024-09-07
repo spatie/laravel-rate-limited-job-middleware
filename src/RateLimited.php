@@ -209,9 +209,11 @@ class RateLimited
     {
         event(new LimitExceeded($job));
 
-        $dontRelease = is_callable($this->dontRelease)
-            ? $this->dontRelease()
-            : $this->dontRelease;
+        $dontRelease = $this->dontRelease;
+
+        $dontRelease = is_callable($dontRelease)
+            ? $dontRelease($job)
+            : $dontRelease;
 
         if ($dontRelease) {
             return;

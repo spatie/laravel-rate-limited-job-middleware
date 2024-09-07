@@ -75,7 +75,9 @@ test('limits job execution but does not release', function (RateLimited $middlew
 })->with('middlewares');
 
 test('limits job execution but does not release with callback', function (RateLimited $middleware) {
-    $middleware->dontRelease(function () {
+    $middleware->dontRelease(function ($job = null) {
+        expect($job)->not()->toBeNull();
+
         return true;
     });
 
