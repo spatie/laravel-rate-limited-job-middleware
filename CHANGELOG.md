@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.8.0 - 2025-02-27
+
+### What's Changed
+
+* Laravel 12.x Compatibility by @laravel-shift in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/58
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.7.0...2.8.0
+
 ## 2.7.0 - 2024-09-07
 
 * Add the option to pass a closure to determine if the job should release
