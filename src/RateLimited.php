@@ -5,6 +5,8 @@ namespace Spatie\RateLimitedMiddleware;
 use ArtisanSdk\RateLimiter\Buckets\Leaky;
 use ArtisanSdk\RateLimiter\Limiter;
 use Closure;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\SendQueuedMailable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Spatie\RateLimitedMiddleware\Events\LimitExceeded;
@@ -207,18 +209,45 @@ class RateLimited
 
     protected function releaseJob($job): void
     {
-        event(new LimitExceeded($job));
+        try {
+            $resolvedJob = $this->resolveShouldQueueJob($job);
 
-        $dontRelease = $this->dontRelease;
+            if ($resolvedJob !== null) {
+                event(new LimitExceeded($resolvedJob));
+            }
 
-        $dontRelease = is_callable($dontRelease)
-            ? $dontRelease($job)
-            : $dontRelease;
+            $dontRelease = $this->dontRelease;
 
-        if ($dontRelease) {
-            return;
+            $dontRelease = is_callable($dontRelease)
+                ? $dontRelease($job)
+                : $dontRelease;
+
+            if ($dontRelease) {
+                return;
+            }
+
+            $job->release($this->releaseDuration());
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Resolve a ShouldQueue job from various wrappers.
+     */
+    protected function resolveShouldQueueJob($job): ?ShouldQueue
+    {
+        if ($job instanceof ShouldQueue) {
+            return $job;
         }
 
-        $job->release($this->releaseDuration());
+        if ($job instanceof SendQueuedMailable) {
+            $mailable = $job->mailable;
+            if ($mailable instanceof ShouldQueue) {
+                return $mailable;
+            }
+        }
+
+        return null;
     }
 }
