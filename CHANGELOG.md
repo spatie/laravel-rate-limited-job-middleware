@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.8.1 - 2025-08-19
+
+### What's Changed
+
+* LimitExceeded event type-hints ShouldQueue but queued Mailables are wrapped in SendQueuedMailable by @rogerio-pereira in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/60
+
+### New Contributors
+
+* @rogerio-pereira made their first contribution in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/60
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.8.0...2.8.1
+
 ## 2.8.0 - 2025-02-27
 
 ### What's Changed
