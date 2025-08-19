@@ -5,12 +5,12 @@ namespace Spatie\RateLimitedMiddleware;
 use ArtisanSdk\RateLimiter\Buckets\Leaky;
 use ArtisanSdk\RateLimiter\Limiter;
 use Closure;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\SendQueuedMailable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Spatie\RateLimitedMiddleware\Events\LimitExceeded;
-use Exception;
 
 class RateLimited
 {
