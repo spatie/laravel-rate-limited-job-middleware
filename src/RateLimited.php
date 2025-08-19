@@ -10,6 +10,7 @@ use Illuminate\Mail\SendQueuedMailable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Spatie\RateLimitedMiddleware\Events\LimitExceeded;
+use Exception;
 
 class RateLimited
 {
@@ -227,14 +228,11 @@ class RateLimited
             }
 
             $job->release($this->releaseDuration());
-        } catch (\Exception $e) {
-            throw $e;
+        } catch (Exception $exception) {
+            throw $exception;
         }
     }
 
-    /**
-     * Resolve a ShouldQueue job from various wrappers.
-     */
     protected function resolveShouldQueueJob($job): ?ShouldQueue
     {
         if ($job instanceof ShouldQueue) {
