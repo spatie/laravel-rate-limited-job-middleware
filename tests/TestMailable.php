@@ -2,8 +2,8 @@
 
 namespace Spatie\RateLimitedMiddleware\Tests;
 
-use Illuminate\Mail\Mailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
 
 class TestMailable extends Mailable implements ShouldQueue
 {
