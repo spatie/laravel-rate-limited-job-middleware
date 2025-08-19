@@ -1,0 +1,6 @@
+<?php
+
+use Spatie\RateLimitedMiddleware\Tests\TestCase;
+
+uses(TestCase::class)
+    ->in(__DIR__);

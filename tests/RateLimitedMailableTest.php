@@ -7,11 +7,9 @@ use Illuminate\Support\Facades\Event;
 use Spatie\RateLimitedMiddleware\Events\LimitExceeded;
 use Spatie\RateLimitedMiddleware\RateLimited;
 
-uses(\Orchestra\Testbench\Concerns\CreatesApplication::class);
-
 beforeEach(function () {
     Event::fake();
-})->createApplication();
+});
 
 test('handles SendQueuedMailable without throwing type errors', function () {
     $middleware = new RateLimited(false);

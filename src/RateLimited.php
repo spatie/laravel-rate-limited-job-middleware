@@ -138,8 +138,25 @@ class RateLimited
     {
         $releaseAfterSeconds = 0;
         $interval = $this->releaseInSeconds;
+        $maxSeconds = 86400 * 365; // Cap at 1 year to prevent overflow
+        
         for ($attempt = 0; $attempt <= $attemptedCount; $attempt++) {
-            $releaseAfterSeconds += $interval * pow($backoffRate, $attempt);
+            // Break early if the power would result in an extremely large number
+            if ($attempt > 30) { // 2^30 is already over a billion
+                $releaseAfterSeconds = $maxSeconds;
+                break;
+            }
+            
+            $power = pow($backoffRate, $attempt);
+            $increment = $interval * $power;
+            
+            // Prevent integer overflow by capping the result
+            if ($releaseAfterSeconds > $maxSeconds || $increment > $maxSeconds - $releaseAfterSeconds) {
+                $releaseAfterSeconds = $maxSeconds;
+                break;
+            }
+            
+            $releaseAfterSeconds += $increment;
         }
 
         return $this->releaseAfterSeconds((int) $releaseAfterSeconds);

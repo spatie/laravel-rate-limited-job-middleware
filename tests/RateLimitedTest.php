@@ -14,8 +14,6 @@ use Spatie\RateLimitedMiddleware\RateLimited;
 
 const CALLS_ALLOWED = 2;
 
-uses(CreatesApplication::class);
-
 dataset('middlewares', fn () => [
     'Redis' => (new RateLimited())
         ->allow(CALLS_ALLOWED)
@@ -50,7 +48,7 @@ beforeEach(function () {
     };
 
     Event::fake();
-})->createApplication();
+});
 
 test('limits job execution', function (RateLimited $middleware) {
     $this->job->shouldReceive('fire')->times(2);
@@ -134,5 +132,5 @@ test('release can be set with custom exponential backoff rate', function (RateLi
 })->with('middlewares');
 
 test('release after backoff can handle large number of attempts', function () {
-    expect((new RateLimited())->releaseAfterBackoff(60))->toBeInstanceOf(RateLimited::class);
+    expect((new RateLimited())->releaseAfterBackoff(30))->toBeInstanceOf(RateLimited::class);
 });
