@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-rate-limited-job-middleware` will be documented in this file
 
+## 2.8.2 - 2025-11-25
+
+### What's Changed
+
+* Update issue template by @AlexVanderbist in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/61
+* Added Symfony 8 support to all symfony/* packages. by @thecaliskan in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/63
+
+### New Contributors
+
+* @AlexVanderbist made their first contribution in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/61
+* @thecaliskan made their first contribution in https://github.com/spatie/laravel-rate-limited-job-middleware/pull/63
+
+**Full Changelog**: https://github.com/spatie/laravel-rate-limited-job-middleware/compare/2.8.1...2.8.2
+
 ## 2.8.1 - 2025-08-19
 
 ### What's Changed
